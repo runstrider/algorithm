@@ -80,6 +80,14 @@ func main() {
 
 	fmt.Println("房屋打劫2")
 	fmt.Println(houserobber2(a))
+
+	nums := [][]int{
+		{1,0,1,0,0},
+		{1,0,1,1,1},
+		{1,1,1,1,1},
+		{1,0,0,1,0}}
+	fmt.Println("maximalsquare")
+	fmt.Println(maximalsquare(nums))
 }
 
 func quic_wiki(data []int) {
@@ -552,4 +560,56 @@ func houserobber2(property []int) int{
 	}
 
 	return  max(houserobber(property[1:]), houserobber(property[:len(property)-1]))
+}
+
+func min(num1, num2 int) int{
+	if num1 < num2 {
+		return num1
+	}else {
+		return  num2
+	}
+}
+
+//Maximal Square:矩形里最大的正方形
+func maximalsquare(matrix [][]int) int{
+	var dp [][]int
+
+	if len(matrix) == 1{
+		return matrix[0][0]
+	}
+	lengthx := len(matrix)
+	lengthy := len(matrix[0])
+	dp = make([][]int, lengthx)
+	for i:=0;i<lengthx;i++{
+		dp[i]= make([]int, lengthy)
+	}
+
+	var maxlength int
+	//初始化不能得到的状态值
+	for i:=0;i<lengthx;i++{
+		dp[i][0] = matrix[i][0]
+		if dp[i][0] == 1{
+			maxlength = 1
+		}
+	}
+	for i:=0;i<lengthy;i++{
+		dp[0][i] = matrix[0][i]
+		if dp[0][i] == 1{
+			maxlength = 1
+		}
+	}
+
+	for i:=1;i<lengthx;i++{
+		for j:=1;j<lengthy;j++{
+			if matrix[i][j] == 1 {
+				dp[i][j] = min(min(dp[i][j-1], dp[i-1][j]), dp[i-1][j-1]) + 1
+				if dp[i][j] > maxlength{
+					maxlength = dp[i][j]
+				}
+			}else{
+				dp[i][j] = 0
+			}
+		}
+	}
+	return maxlength * maxlength
 }
