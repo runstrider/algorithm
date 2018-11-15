@@ -88,6 +88,13 @@ func main() {
 		{1,0,0,1,0}}
 	fmt.Println("maximalsquare")
 	fmt.Println(maximalsquare(nums))
+
+	fmt.Println("longestIncreasingContinuousSubsequence", a)
+	fmt.Println(longestIncreasingContinuousSubsequence(a))
+
+	//nomater连续or不连续子序列
+	fmt.Println("longestIncreasingSubsequence")
+	fmt.Println(longestIncreasingSubsequence(a))
 }
 
 func quic_wiki(data []int) {
@@ -612,4 +619,50 @@ func maximalsquare(matrix [][]int) int{
 		}
 	}
 	return maxlength * maxlength
+}
+
+//最长连续递增递减子序列
+func longestIncreasingContinuousSubsequence(nums []int) int{
+	if len(nums) == 0 {
+		return 0
+	}
+
+	var inc, dec, maxlength int
+	inc = 1
+	dec = 1
+	maxlength = 1
+	for i:=0;i<len(nums)-1;i++{
+		if nums[i] > nums[i+1] {
+			dec = dec + 1
+			inc = 1
+		}
+		if nums[i] < nums[i+1] {
+			inc = inc + 1
+			dec = 1
+		}
+		if nums[i] == nums[i+1] {
+			inc = inc + 1
+			dec = dec + 1
+		}
+
+		maxlength = max(maxlength, max(dec, inc))
+	}
+
+	return maxlength
+}
+
+//最长子序列的长度
+func longestIncreasingSubsequence(nums []int) int {
+	dp := make([]int, len(nums))
+	var maxlength int
+	for i :=0; i < len(nums); i++ {
+		for j := 0;j<i;j++ {
+			if nums[j] <= nums[i] {
+				dp[i] = max(dp[i], dp[j] + 1)
+			}
+		}
+		maxlength = max(maxlength, dp[i])
+	}
+
+	return maxlength
 }
